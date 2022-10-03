@@ -1,62 +1,71 @@
-<?php  
-$conn = mysqli_connect('localhost', 'root', '', 'prakweb_c_203040149_pw');
+<?php
+require 'functions.php';
+$buku = query("SELECT * FROM buku");
 
-$result = mysqli_query($conn, "SELECT * FROM buku");
-
-$rows = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $rows[] = $row;
+//ketika tombol cari di klik
+if (isset($_POST['cari'])) {
+  $buku = cari($_POST['keyword']);
 }
-
-$buku = $rows;
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+
 <head>
-	<title>Daftar Novel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <title>Daftar Buku</title>
 </head>
+
 <body>
-	<h3>Daftar Novel</h3>
+    <h3>Daftar Koleksi Buku</h3>
 
-	<a href="tambah.php">Tambah Data buku</a>
-  	<br><br>
+    <a href="tambah.php">Tambah Data Buku</a>
+    <br><br>
 
-  	<form action="" method="post">
-  		<input type="text" name="keyword" size="30" placeholder="masukkan keyword pencarian..." autocomplete="off" autofocus>
-  		<button type="submit" name="cari">Cari!</button>
-  	</form>
-  	<br>
+    <form method="post" action="">
+      <input type="text" name="keyword" size="50" placeholder="masukkan keywoard pencarian" autocomplete="off" autofocus>
+      <button type="submit" name="cari">Cari!</button>
+    </form>
+    <br>
 
-	<table border="1" cellpadding="10" cellspacing="0s">
-		<tr>
-			<th>Id</th>
-			<th>Nama Buku</th>
-			<th>Pengarang</th>
-			<th>Jumlah Halaman</th>
-            <th>Penerbit</th>
-            <th>Gambar</th>
-		</tr>
+    <table border="5" cellpadding="15" cellspacing="0" style="background-color: white;">
+      <tr>
+        <th>No</th>
+        <th>Nama Buku</th>
+        <th>pengarang</th>
+        <th>jumlah lembar</th>
+        <th>penerbit</th>
+        <th>gambar</th>
+        <th>aksi</th>
+      </tr>
 
-		<?php if(empty($buku)) : ?>
-		<tr>
-			<td colspan="4">
-				<p style="color: red; font-style: italic;">data buku tidak ditemukan!</p>
-			</td>
-		</tr>
-		<?php endif; ?>
+      <?php if (empty($buku)) : ?>
+        <tr>
+          <td colspan="4">
+            <p style="color: red; font-style: italic;">Data buku tidak ditemukan</p>
+          </td>
+        </tr>
+      <?php endif; ?>
 
-		<?php $i = 1; 
-		foreach($buku as $b) : ?>
-		<tr>
-			<td><?= $i++; ?></td>
-			<td><?= $b['nama buku']; ?></td>
-            <td><?= $b['nama pengarang']; ?></td>
-            <td><?= $b['jml lembar']; ?></td>
-            <td><?= $b['penerbit']; ?></td>
-            <td><img src="assets/<?= $b['gambar_buku']; ?>" width = "60" ></td>
-		</tr>
-		<?php endforeach; ?>
-	</table>
+      <?php $i = 1;
+      foreach ($buku as $m) : ?>
+        <tr>
+          <td><?= $i++; ?></td>
+          <td><?= $m['nama_buku']; ?></td>
+          <td><?= $m['nama_pengarang']; ?></td>
+          <td><?= $m['jml_lembar']; ?></td>
+          <td><?= $m['penerbit']; ?></td>
+          <td><img src="img/<?= $m['gambar_buku']; ?>" width="120"></td>
+          <td>
+          <a href="ubah.php?id=<?= $m['Id']; ?>">ubah</a>
+          <a href="hapus.php?id=<?= $m['Id']; ?>">hapus</a>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </table>
 </body>
+
 </html>
